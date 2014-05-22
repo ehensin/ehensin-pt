@@ -1,0 +1,36 @@
+<config>
+   <controller class="com.ehensin.pt.controller.PTController">
+     <cleaner switch="off" class="com.ehensin.pt.cleaner.BusinessDataCleaner">
+        <sql>truncate table  LBOSS_PAY_ACCOUNT</sql>
+        <sql>truncate table  LBOSS_LUSER_TRANSACTION</sql>
+        <sql>truncate table  LBOSS_LUSER_TRANS_DETAIL</sql>
+        <sql>truncate table  LBOSS_CORE_TRANSACTION</sql>
+        <sql>truncate table  LSMP_LOTTERY_USER</sql>
+        <sql>truncate table  LSMP_LOTTERY_USER_LEVEL</sql>
+        <sql>truncate table  LSMP_LOTTERY</sql>
+        <sql>truncate table  LSMP_LOTTERY_LOT_DETAIL</sql>
+        <sql>truncate table  LSMP_SPORTTERY_DETAIL</sql>
+     </cleaner>
+     <preparer switch="on" class="com.ehensin.pt.preparer.DefaultUserDataPreparer">
+        <parameter name="userdata" value="e:/user.data" />
+        <parameter name="maxnum" value="1000000" />
+        <parameter name="dbupdate" value="false" />
+     </preparer>
+     <outputer  class="com.ehensin.pt.outputer.ConsoleOutputer"></outputer>
+     <analyzer  class="com.ehensin.pt.analyzer.BusinessAnalyzer"></analyzer>
+     
+     <!--span:执行时间跨度，以分为单位，period:统计周期，以秒为单位 -->
+     <runners span="5" period='30'>
+         <runner ip="10.1.1.21" port="1099" serviceName="ptgen" concurrentusers="500" runseq="on" userdata="e:/user1.data" log="on"
+                       callback="com.ehensin.pt.callback.GenCallBack">
+             <task name="购彩任务" class="com.newcosoft.lsmp.pt.business.task.LotteryOrderTask" >
+                   <parameter name="ip" value="192.168.1.31" />
+                   <parameter name="port" value="1099" />
+                   <parameter name="ispay" value="false"></parameter>
+                   <parameter name="thinktime" value="1"></parameter>
+              </task>
+         </runner>
+        
+     </runners> 
+   </controller>
+</config>
